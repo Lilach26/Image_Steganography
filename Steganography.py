@@ -1,7 +1,7 @@
 # Steganography project, assigned by:
 # Lilach Naor - id: 313588352, Sapir Shemesh - id: 311342794
 # Course lecturer - Yakir Menahem
-
+# please install the following libraries: pip install cv2 , numpy , PIL
 
 import numpy as np
 import cv2
@@ -24,7 +24,7 @@ def modify_pixels(pixels, text):
 
     # Iterate over the list of binary representation for the text
     for i in range(length_text):
-        # Extracting 3 pixels at a time
+        # Extracting 3 pixels at a time ( 9 RGB value)
         pixels - [j for j in image_data.__next__()[:3] + image_data.__next__()[:3] +
                   image_data.__next__()[:3]]
 
@@ -81,6 +81,7 @@ def new_image_pixels(new_image, text):
             x += 1
 
 
+# the function get text and encode it into a new image
 def encode_text(text):
     img_name = input("Enter image name(with extension - png only): ")
     image = Image.open(img_name, 'r') # Opening the given image for reading
@@ -99,21 +100,55 @@ def encode_text(text):
     # ^Split the new image name after '.', and save it as the given extension in Upper case
 
 
+# the function decode hidden text from image
+def decode_text():
+    img_name = input("Enter image name(with extension - png only): ")
+    image = Image.open(img_name, 'r')  # Opening the given image for reading
+
+    # hidden text - for appending the chars in the image
+    hidden_text = ''
+    # img_data became object which we can iterate over it
+    img_data = iter(image.getdata())
+
+    while True:
+        # extracting 3 pixels at a time ( 9 RGB value)
+        pixels = [i for i in img_data.__next__()[:3] + img_data.__next__()[:3] +
+                  img_data.__next__()[:3]]
+
+        # string of binary - representation of each char
+        binary = ''
+
+        # update the binary string with 0 when the pixel is even and 1 when the pixel is odd.
+        for i in pixels[:8]:
+            # if the pixel is even ,add 0 bit to the binary string
+            if i % 2 == 0:
+                binary += '0'
+            else:
+                binary += '1'
+
+        # convert the binary number to int and then to char and update the hidden text string
+        hidden_text += chr(int(binary,2))
+
+        # check if there is finish to read the hidden text , if yes - we can return the hidden text.
+        if pixels[-1] % 2 != 0:
+            return hidden_text
+
+
 def main():
     type = input("Enter the mode: 1.Text 2.Image: ")
 
     if type == 1:
-        modeText = input("Want to 1. encode / 2. decode: ")
+        mode_text = input("Want to 1. encode / 2. decode: ")
 
-        if modeText == 1:
+        if mode_text == 1:
             text = input("Please input the text you want to encode: ")
             encode_text(text)
         else:
             print("The hidden text is: " + decode_text())
 
     elif type == 2:
-        modeImage = input("Want to 1.encode / 2.decode: ")
-        if modeImage == 1:
+        mode_image = input("Want to 1.encode / 2.decode: ")
+        if mode_image == 1:
             encode_image()
         else:
             decode_image()
