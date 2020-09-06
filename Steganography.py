@@ -1,7 +1,10 @@
 # Steganography project, assigned by:
 # Lilach Naor - id: 313588352, Sapir Shemesh - id: 311342794
 # Course lecturer - Yakir Menahem
-# please install the following libraries: pip install cv2 , numpy , pillow
+# Summer 2020
+
+# please install the following modules:
+# pip install cv2, numpy, pillow
 
 
 import numpy as np
@@ -9,7 +12,8 @@ import cv2
 import random
 from PIL import Image
 
-# the function take 2 pictures and encode one in other by merge pixels
+
+# The function take 2 pictures and encode one in other by merge pixels
 def encode_image():
     image1_name = input("Enter name of the original image with png extension only: ")
     image2_name = input("Enter name of the hidden image with png extension only: ")
@@ -18,7 +22,7 @@ def encode_image():
     image1 = cv2.imread(image1_name)
     image2 = cv2.imread(image2_name)
 
-    # check if the pictures in the fit size ( smaller or equal)
+    # check if the pictures in the fit size (smaller or equal)
     if image2.shape[0] > image1.shape[0] or image2.shape[1] > image1.shape[1]:
         raise Exception('Image 2 should be smaller or equal to image1!')
 
@@ -33,8 +37,8 @@ def encode_image():
                 binary_image1 = format(image1[i][j][k], '08b')
                 binary_image2 = format(image2[i][j][k], '08b')
 
-                new_pixel_binary = binary_image1[:4] + binary_image2[:4] # concatenation bits
-                image1[i][j][k] = int(new_pixel_binary, 2) # modify the image1's pixels to int
+                new_pixel_binary = binary_image1[:4] + binary_image2[:4]  # concatenation bits
+                image1[i][j][k] = int(new_pixel_binary, 2)  # modify the image1's pixels to int
 
     # given new name to the new picture
     new_image_name = input("Enter the name for merged images - with png extension only: ")
@@ -59,18 +63,19 @@ def decode_image():
 
     for i in range(width):
         for j in range(height):
-            for l in range(3):
-                binary_merge_image = format(merge_image[i][j][l], '08b') #convert the merge image's pixels into 8-bit binary representation
+            for k in range(3):
+                # convert the merge image's pixels into 8-bit binary representation
+                binary_merge_image = format(merge_image[i][j][k], '08b')
                 # we take the first 4 bits from image 1 ang image2 respectively and add 4 bits of 1 or 0 randomly
                 # 4 bits of 0 or 1 randomly will give us minimum 0 or maximum 16 (int)
                 # and its negligible to the pixel value in the original image
                 binary_image1 = binary_merge_image[:4] + chr(random.randint(0, 1) + 48) * 4
                 binary_image2 = binary_merge_image[4:] + chr(random.randint(0, 1) + 48) * 4
 
-                # Appending data to image1 and image2
                 # convert the binary representation of each pixel into integer
-                image1[i][j][l] = int(binary_image1, 2)
-                image2[i][j][l] = int(binary_image2, 2)
+                # Appending data to image1 and image2
+                image1[i][j][k] = int(binary_image1, 2)
+                image2[i][j][k] = int(binary_image2, 2)
 
     # save the 2 images with new name
     cv2.imwrite(original_image_name, image1)
@@ -107,7 +112,7 @@ def modify_pixels(pixels, text):
                 if pixels[j] != 0:
                     pixels[j] -= 1
                 else:
-                    pixels[j] +=1
+                    pixels[j] += 1
 
         # in the last pixels we will check if there are more data to read
         # 0 - if there any message to read or 1 - if no.
@@ -135,14 +140,14 @@ def modify_pixels(pixels, text):
 # The function gets a copy of original image, then changes the pixels
 # with the modify_pixels function above
 def new_image_pixels(new_image, text):
-    width = new_image.size[0] # image.size returns image width, height and color
-    (x, y) = (0, 0) # x=0 rows, y=0 column
+    width = new_image.size[0]  # image.size returns image width, height and color
+    (x, y) = (0, 0)  # x=0 rows, y=0 column
 
     # the for loop run in the pixels section of the new image
     for pixel in modify_pixels(new_image.getdata(), text):
         # Putting modified pixels in the new image
         new_image.putpixel((x, y), pixel)
-        if x == width - 1: # if we are in the last row
+        if x == width - 1:  # if we are in the last row
             x = 0
             y += 1
         else:
@@ -152,12 +157,12 @@ def new_image_pixels(new_image, text):
 # the function get text and encode it into a new image
 def encode_text(text):
     img_name = input("Enter image name(with extension - png only): ")
-    image = Image.open(img_name, 'r') # Opening the given image for reading
-    image_size = image.size[0] * image.size[1] * 3 # How many pixels the image contains
+    image = Image.open(img_name, 'r')  # Opening the given image for reading
+    image_size = image.size[0] * image.size[1] * 3  # How many pixels the image contains
 
     # Check if the text is empty
     if len(text) == 0:
-        raise ValueError('You entered nothing') # valueError is a specific exception
+        raise ValueError('You entered nothing')  # valueError is a specific exception
 
     # check if the input text is larger than the image's dimensions * pixels
     if len(text) > image_size:
@@ -207,15 +212,15 @@ def decode_text():
         if pixels[-1] % 2 != 0:
             password = (hidden_text.split('@')[0])  # split the password string from the input
             if password_input == password:
-                return hidden_text.split('@')[1] # return the string without the password
+                return hidden_text.split('@')[1]  # return the string without the password
             else:
-                raise Exception('Incorrect password!') # if the input password different from the encryption password
+                raise Exception('Incorrect password!')  # if the input password different from the encryption password
 
 
 def main():
-    type = int(input("Enter the mode: 1.Text 2.Image: "))
+    choice = int(input("Enter the mode: 1.Text 2.Image: "))
 
-    if type == 1:
+    if choice == 1:
         mode_text = int(input("Want to 1. encode / 2. decode: "))
 
         if mode_text == 1:
@@ -224,7 +229,7 @@ def main():
         else:
             print("The hidden text is: " + decode_text())
 
-    elif type == 2:
+    elif choice == 2:
         mode_image = int(input("Want to 1.encode / 2.decode: "))
         if mode_image == 1:
             encode_image()
@@ -235,6 +240,6 @@ def main():
         raise Exception("Invalid input!")
 
 
-# Run the main function of Steganography
+# Run the main function of program
 if __name__ == "__main__":
     main()
