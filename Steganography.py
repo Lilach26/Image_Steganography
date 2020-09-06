@@ -1,7 +1,7 @@
 # Steganography project, assigned by:
 # Lilach Naor - id: 313588352, Sapir Shemesh - id: 311342794
 # Course lecturer - Yakir Menahem
-# please install the following libraries: pip install cv2 , numpy , PIL
+# please install the following libraries: pip install cv2 , numpy , pillow
 
 
 import numpy as np
@@ -9,16 +9,17 @@ import cv2
 import random
 from PIL import Image
 
-
+# the function take 2 pictures and encode one in other by merge pixels
 def encode_image():
-    image1_name = input("Enter name of the first image: ")
-    image2_name = input("Enter name of the second image: ")
+    image1_name = input("Enter name of the original image with png extension only: ")
+    image2_name = input("Enter name of the hidden image with png extension only: ")
 
     # Image2 is hidden inside image1
     image1 = cv2.imread(image1_name)
     image2 = cv2.imread(image2_name)
 
-    if image2.size[0] > image1.size[0] or image2.size[1] > image2.size[1]:
+    # check if the pictures in the fit size ( smaller or equal)
+    if image2.shape[0] > image1.shape[0] or image2.shape[1] > image1.shape[1]:
         raise Exception('Image 2 should be smaller or equal to image1!')
 
     # The 3 for loops iterate over image1 and image2, convert
@@ -28,22 +29,58 @@ def encode_image():
     for i in range(image2.shape[0]):
         for j in range(image2.shape[1]):
             for k in range(3):
+                # modify the image1's pixels to binary
                 binary_image1 = format(image1[i][j][k], '08b')
                 binary_image2 = format(image2[i][j][k], '08b')
 
-                new_pixel_binary = binary_image1[:4] + binary_image2[:4]
-                image1[i][j][k] = int(new_pixel_binary, 2) # modify the image1's pixels
+                new_pixel_binary = binary_image1[:4] + binary_image2[:4] # concatenation bits
+                image1[i][j][k] = int(new_pixel_binary, 2) # modify the image1's pixels to int
 
-    new_image_name = input("Enter the name for merged images: ")
+    # given new name to the new picture
+    new_image_name = input("Enter the name for merged images - with png extension only: ")
     cv2.imwrite(new_image_name, image1)
+
+
+# the function gets merge picture and decoded it by separate the bits to 4 MSB and 4 LSB respectively
+# and add 4 bits of 0 or 1 randomly - to try retrieve the original pixels
+def decode_image():
+    image_name = input("please enter the image's name to decode  - with png extension only: ")
+    merge_image = cv2.imread(image_name)
+
+    original_image_name = input("please enter name of original image - with png extension only: ")
+    decrypted_image_name = input("please enter name of decrypted image - with png extension only: ")
+
+    width = merge_image.shape[0]
+    height = merge_image.shape[1]
+
+    # create 2 blank images
+    image1 = np.zeros((width, height, 3), np.uint8)
+    image2 = np.zeros((width, height, 3), np.uint8)
+
+    for i in range(width):
+        for j in range(height):
+            for l in range(3):
+                binary_merge_image = format(merge_image[i][j][l], '08b') #convert the merge image's pixels into 8-bit binary representation
+                # we take the first 4 bits from image 1 ang image2 respectively and add 4 bits of 1 or 0 randomly
+                # 4 bits of 0 or 1 randomly will give us minimum 0 or maximum 16 (int)
+                # and its negligible to the pixel value in the original image
+                binary_image1 = binary_merge_image[:4] + chr(random.randint(0, 1) + 48) * 4
+                binary_image2 = binary_merge_image[4:] + chr(random.randint(0, 1) + 48) * 4
+
+                # Appending data to image1 and image2
+                # convert the binary representation of each pixel into integer
+                image1[i][j][l] = int(binary_image1, 2)
+                image2[i][j][l] = int(binary_image2, 2)
+
+    # save the 2 images with new name
+    cv2.imwrite(original_image_name, image1)
+    cv2.imwrite(decrypted_image_name, image2)
 
 
 # The function will get string and convert it to ASCII and then to 8-bit binary list.
 def convert_int_2binary(text):
     binary = [format(ord(value), '08b') for value in text]
     return binary
-
-
 
 
 # The function will get pixels and modify those according to the algorithm describes
@@ -188,7 +225,7 @@ def main():
             print("The hidden text is: " + decode_text())
 
     elif type == 2:
-        mode_image = input("Want to 1.encode / 2.decode: ")
+        mode_image = int(input("Want to 1.encode / 2.decode: "))
         if mode_image == 1:
             encode_image()
         else:
