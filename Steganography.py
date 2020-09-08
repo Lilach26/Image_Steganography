@@ -83,7 +83,7 @@ def decode_image():
 
 
 # The function will get string and convert it to ASCII and then to 8-bit binary list.
-def convert_int_2binary(text):
+def convert_text_2_binary(text):
     binary = [format(ord(value), '08b') for value in text]
     return binary
 
@@ -91,15 +91,14 @@ def convert_int_2binary(text):
 # The function will get pixels and modify those according to the algorithm describes
 def modify_pixels(pixels, text):
     # variable declaration
-    binary_list = convert_int_2binary(text)
+    binary_list = convert_text_2_binary(text)
     length_text = len(binary_list)
     image_data = iter(pixels)
 
     # Iterate over the list of binary representation for the text
     for i in range(length_text):
         # Extracting 3 pixels at a time ( 9 RGB value)
-        pixels = [j for j in image_data.__next__()[:3] + image_data.__next__()[:3] +
-                  image_data.__next__()[:3]]
+        pixels = [j for j in image_data.__next__()[:3] + image_data.__next__()[:3] + image_data.__next__()[:3]]
 
         # pixels values should be modified - odd for bit 1 and even for bit 0
         # 8 iterations for the first 8 pixels
@@ -191,8 +190,7 @@ def decode_text():
 
     while True:
         # extracting 3 pixels at a time ( 9 RGB value)
-        pixels = [i for i in img_data.__next__()[:3] + img_data.__next__()[:3] +
-                  img_data.__next__()[:3]]
+        pixels = [i for i in img_data.__next__()[:3] + img_data.__next__()[:3] + img_data.__next__()[:3]]
 
         # string of binary - representation of each char
         binary = ''
@@ -222,10 +220,11 @@ def main():
 
     if mode_text == 1:
         choice = int(input("Enter the mode: 1.Text 2.Image: "))
-
+        password = input("Please enter the password: ")
         if choice == 1:
-            text = input("Please input the password + @ and then the text: ")
-            encode_text(text)
+            text = input("Please input the text you want to hide: ")
+            data = password + '@' + text
+            encode_text(data)
         else:
             encode_image()
 
