@@ -218,21 +218,22 @@ def decode_text():
 
 
 def main():
-    choice = int(input("Enter the mode: 1.Text 2.Image: "))
+    mode_text = int(input("what kind of action would you like to do?  1. encode / 2. decode: "))
 
-    if choice == 1:
-        mode_text = int(input("Want to 1. encode / 2. decode: "))
+    if mode_text == 1:
+        choice = int(input("Enter the mode: 1.Text 2.Image: "))
 
-        if mode_text == 1:
+        if choice == 1:
             text = input("Please input the password + @ and then the text: ")
             encode_text(text)
         else:
-            print("The hidden text is: " + decode_text())
-
-    elif choice == 2:
-        mode_image = int(input("Want to 1.encode / 2.decode: "))
-        if mode_image == 1:
             encode_image()
+
+    elif mode_text == 2:
+        choice = int(input("Enter the mode: 1.Text 2.Image: "))
+
+        if choice == 1:
+            print("The hidden text is: " + decode_text())
         else:
             decode_image()
 
