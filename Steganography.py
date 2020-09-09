@@ -16,12 +16,16 @@ import random
 from PIL import Image
 from matplotlib import pyplot as plt
 
-
-def show_image(image):
+# the function will show the decode result of the hidden picture
+def show_image(image1, image2):
     plt.figure('Picture')  # open new window with given name
-    # plt.subplot(20,2,1)
-    plt.imshow(image)  # show the picture in the open window (know to create one if there is no open window)
-    plt.show()  # show the window (in plt the window is see through
+    plt.subplot(121) # place of the shown picture
+    # show the picture in the open window (know to create one if there is no open window)
+    # plt show the picture in RGB, and CV2 in BGR , so we flipped the layers
+    plt.imshow(image1[:, :, ::-1])
+    plt.subplot(122)
+    plt.imshow(image2[:, :, ::-1])
+    plt.show() # show the window (in plt the window is see through)
     plt.axis('off')
 
 
@@ -43,7 +47,6 @@ def encode_image():
     image1 = cv2.imread(image1_name)
     image2 = cv2.imread(image2_name)
 
-    show_image(image1)
     # check if the pictures in the fit size (smaller or equal)
     if image2.shape[0] > image1.shape[0] and image2.shape[1] > image1.shape[1]:
         raise Exception('Image 2 should be smaller or equal to image1!')
@@ -121,6 +124,9 @@ def decode_image():
     # save the 2 images with new name
     cv2.imwrite(original_image_name, image1)
     cv2.imwrite(decrypted_image_name, image2)
+
+    # the function show the picture
+    show_image(image1, image2)
 
 
 # The function will get string and convert it to ASCII and then to 8-bit binary list.
