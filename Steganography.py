@@ -16,7 +16,17 @@ from PIL import Image
 # The function take 2 pictures and encode one in other by merge pixels
 def encode_image():
     image1_name = input("Enter name of the original image with png extension only: ")
+
+    # check if the user input has different extension than png
+    if image1_name.split(".")[1] != "PNG" or image1_name.split(".")[1] != "png":
+        raise Exception('image extension is incorrect !')
+
     image2_name = input("Enter name of the hidden image with png extension only: ")
+
+    # check if the user input has different extension than png
+    if image2_name.split(".")[1] != "PNG" or image2_name.split(".")[1] != "png":
+        raise Exception('image extension is incorrect !')
+
 
     # Image2 is hidden inside image1
     image1 = cv2.imread(image1_name)
@@ -42,6 +52,11 @@ def encode_image():
 
     # given new name to the new picture
     new_image_name = input("Enter the name for merged images - with png extension only: ")
+
+    # check if the user input has different extension than png
+    if image1_name.split(".")[1] != "PNG" or image1_name.split(".")[1] != "png":
+        raise Exception('image extension is incorrect !')
+
     cv2.imwrite(new_image_name, image1)
 
 
@@ -49,10 +64,24 @@ def encode_image():
 # and add 4 bits of 0 or 1 randomly - to try retrieve the original pixels
 def decode_image():
     image_name = input("please enter the image's name to decode  - with png extension only: ")
+
+    # check if the user input has different extension than png
+    if image_name.split(".")[1] != "PNG" or image_name.split(".")[1] != "png":
+        raise Exception('image extension is incorrect !')
+
     merge_image = cv2.imread(image_name)
 
     original_image_name = input("please enter name of original image - with png extension only: ")
+
+    # check if the user input has different extension than png
+    if original_image_name.split(".")[1] != "PNG" or original_image_name.split(".")[1] != "png":
+        raise Exception('image extension is incorrect !')
+
     decrypted_image_name = input("please enter name of decrypted image - with png extension only: ")
+
+    # check if the user input has different extension than png
+    if decrypted_image_name.split(".")[1] != "PNG" or decrypted_image_name.split(".")[1] != "png":
+        raise Exception('image extension is incorrect !')
 
     width = merge_image.shape[0]
     height = merge_image.shape[1]
@@ -156,6 +185,11 @@ def new_image_pixels(new_image, text):
 # the function get text and encode it into a new image
 def encode_text(text):
     img_name = input("Enter image name(with extension - png only): ")
+
+    # check if the user input has different extension than png
+    if img_name.split(".")[1] != "PNG" or img_name.split(".")[1] != "png":
+        raise Exception('image extension is incorrect !')
+
     image = Image.open(img_name, 'r')  # Opening the given image for reading
     image_size = image.size[0] * image.size[1] * 3  # How many pixels the image contains
 
@@ -173,6 +207,10 @@ def encode_text(text):
     new_image_pixels(new_image, text)
 
     new_img_name = input("Enter the name of new image(with extension - png only): ")
+    # check if the user input has different extension than png
+    if new_img_name.split(".")[1] != "PNG" or new_img_name.split(".")[1] != "png":
+        raise Exception('image extension is incorrect !')
+
     new_image.save(new_img_name, str(new_img_name.split(".")[1].upper()))
     # ^Split the new image name after '.', and save it as the given extension in Upper case
 
@@ -180,6 +218,11 @@ def encode_text(text):
 # the function decode hidden text from image
 def decode_text():
     img_name = input("Enter image name(with extension - png only): ")
+
+    # check if the user input has different extension than png
+    if img_name.split(".")[1] != "PNG" or img_name.split(".")[1] != "png":
+        raise Exception('image extension is incorrect !')
+
     image = Image.open(img_name, 'r')  # Opening the given image for reading
     password_input = input("Please enter the password: ")
 
@@ -220,8 +263,9 @@ def main():
 
     if mode_text == 1:
         choice = int(input("Enter the mode: 1.Text 2.Image: "))
-        password = input("Please enter the password: ")
+
         if choice == 1:
+            password = input("Please enter the password: ")
             text = input("Please input the text you want to hide: ")
             data = password + '@' + text
             encode_text(data)
