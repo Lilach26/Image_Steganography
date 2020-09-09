@@ -4,13 +4,25 @@
 # Summer 2020
 
 # please install the following modules:
-# pip install cv2, numpy, pillow
+# pip3 install cv2
+# pip3 install numpy
+# pip3 install pillow
+# pip3 install matplotlib
 
 
 import numpy as np
 import cv2
 import random
 from PIL import Image
+from matplotlib import pyplot as plt
+
+
+def show_image(image):
+    plt.figure('Picture')  # open new window with given name
+    # plt.subplot(20,2,1)
+    plt.imshow(image)  # show the picture in the open window (know to create one if there is no open window)
+    plt.show()  # show the window (in plt the window is see through
+    plt.axis('off')
 
 
 # The function take 2 pictures and encode one in other by merge pixels
@@ -18,22 +30,22 @@ def encode_image():
     image1_name = input("Enter name of the original image with png extension only: ")
 
     # check if the user input has different extension than png
-    if image1_name.split(".")[1] != "PNG" or image1_name.split(".")[1] != "png":
+    if image1_name.split(".")[1] != "PNG" and image1_name.split(".")[1] != "png":
         raise Exception('image extension is incorrect !')
 
     image2_name = input("Enter name of the hidden image with png extension only: ")
 
     # check if the user input has different extension than png
-    if image2_name.split(".")[1] != "PNG" or image2_name.split(".")[1] != "png":
+    if str(image2_name.split(".")[1]) != "PNG" and str(image2_name.split(".")[1]) != "png":
         raise Exception('image extension is incorrect !')
-
 
     # Image2 is hidden inside image1
     image1 = cv2.imread(image1_name)
     image2 = cv2.imread(image2_name)
 
+    show_image(image1)
     # check if the pictures in the fit size (smaller or equal)
-    if image2.shape[0] > image1.shape[0] or image2.shape[1] > image1.shape[1]:
+    if image2.shape[0] > image1.shape[0] and image2.shape[1] > image1.shape[1]:
         raise Exception('Image 2 should be smaller or equal to image1!')
 
     # The 3 for loops iterate over image1 and image2, convert
@@ -54,7 +66,7 @@ def encode_image():
     new_image_name = input("Enter the name for merged images - with png extension only: ")
 
     # check if the user input has different extension than png
-    if image1_name.split(".")[1] != "PNG" or image1_name.split(".")[1] != "png":
+    if image1_name.split(".")[1] != "PNG" and image1_name.split(".")[1] != "png":
         raise Exception('image extension is incorrect !')
 
     cv2.imwrite(new_image_name, image1)
@@ -66,7 +78,7 @@ def decode_image():
     image_name = input("please enter the image's name to decode  - with png extension only: ")
 
     # check if the user input has different extension than png
-    if image_name.split(".")[1] != "PNG" or image_name.split(".")[1] != "png":
+    if image_name.split(".")[1] != "PNG" and image_name.split(".")[1] != "png":
         raise Exception('image extension is incorrect !')
 
     merge_image = cv2.imread(image_name)
@@ -74,13 +86,13 @@ def decode_image():
     original_image_name = input("please enter name of original image - with png extension only: ")
 
     # check if the user input has different extension than png
-    if original_image_name.split(".")[1] != "PNG" or original_image_name.split(".")[1] != "png":
+    if original_image_name.split(".")[1] != "PNG" and original_image_name.split(".")[1] != "png":
         raise Exception('image extension is incorrect !')
 
     decrypted_image_name = input("please enter name of decrypted image - with png extension only: ")
 
     # check if the user input has different extension than png
-    if decrypted_image_name.split(".")[1] != "PNG" or decrypted_image_name.split(".")[1] != "png":
+    if decrypted_image_name.split(".")[1] != "PNG" and decrypted_image_name.split(".")[1] != "png":
         raise Exception('image extension is incorrect !')
 
     width = merge_image.shape[0]
@@ -187,7 +199,7 @@ def encode_text(text):
     img_name = input("Enter image name(with extension - png only): ")
 
     # check if the user input has different extension than png
-    if img_name.split(".")[1] != "PNG" or img_name.split(".")[1] != "png":
+    if img_name.split(".")[1] != "PNG" and img_name.split(".")[1] != "png":
         raise Exception('image extension is incorrect !')
 
     image = Image.open(img_name, 'r')  # Opening the given image for reading
@@ -208,7 +220,7 @@ def encode_text(text):
 
     new_img_name = input("Enter the name of new image(with extension - png only): ")
     # check if the user input has different extension than png
-    if new_img_name.split(".")[1] != "PNG" or new_img_name.split(".")[1] != "png":
+    if new_img_name.split(".")[1] != "PNG" and new_img_name.split(".")[1] != "png":
         raise Exception('image extension is incorrect !')
 
     new_image.save(new_img_name, str(new_img_name.split(".")[1].upper()))
@@ -220,7 +232,7 @@ def decode_text():
     img_name = input("Enter image name(with extension - png only): ")
 
     # check if the user input has different extension than png
-    if img_name.split(".")[1] != "PNG" or img_name.split(".")[1] != "png":
+    if img_name.split(".")[1] != "PNG" and img_name.split(".")[1] != "png":
         raise Exception('image extension is incorrect !')
 
     image = Image.open(img_name, 'r')  # Opening the given image for reading
@@ -256,34 +268,3 @@ def decode_text():
                 return hidden_text.split('@')[1]  # return the string without the password
             else:
                 raise Exception('Incorrect password!')  # if the input password different from the encryption password
-
-
-def main():
-    mode_text = int(input("what kind of action would you like to do?  1. encode / 2. decode: "))
-
-    if mode_text == 1:
-        choice = int(input("Enter the mode: 1.Text 2.Image: "))
-
-        if choice == 1:
-            password = input("Please enter the password: ")
-            text = input("Please input the text you want to hide: ")
-            data = password + '@' + text
-            encode_text(data)
-        else:
-            encode_image()
-
-    elif mode_text == 2:
-        choice = int(input("Enter the mode: 1.Text 2.Image: "))
-
-        if choice == 1:
-            print("The hidden text is: " + decode_text())
-        else:
-            decode_image()
-
-    else:
-        raise Exception("Invalid input!")
-
-
-# Run the main function of program
-if __name__ == "__main__":
-    main()
