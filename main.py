@@ -10,7 +10,7 @@ def main():
         choice = int(input("Enter the mode: 1.Text 2.Image: "))
 
         if choice == 1:
-            password = input("Please enter the password: ")
+            password = input("Please enter the password (without the char '@'): ")
             text = input("Please input the text you want to hide: ")
             data = password + '@' + text
             stegano.encode_text(data)

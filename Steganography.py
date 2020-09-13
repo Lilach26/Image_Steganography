@@ -16,17 +16,24 @@ import random
 from PIL import Image
 from matplotlib import pyplot as plt
 
+
 # the function will show the decode result of the hidden picture
 def show_image(image1, image2):
     plt.figure('Picture')  # open new window with given name
-    plt.subplot(121) # place of the shown picture
+    plt.subplot(121)  # place of the shown picture
     # show the picture in the open window (know to create one if there is no open window)
     # plt show the picture in RGB, and CV2 in BGR , so we flipped the layers
     plt.imshow(image1[:, :, ::-1])
     plt.subplot(122)
     plt.imshow(image2[:, :, ::-1])
-    plt.show() # show the window (in plt the window is see through)
+    plt.show()  # show the window (in plt the window is see through)
     plt.axis('off')
+
+
+# The function check an image's extension
+def check_image_extension(image_name):
+    if image_name.split(".")[1] != "PNG" and image_name.split(".")[1] != "png":
+        raise Exception('Image extension is incorrect, should be "PNG" or "png"!')
 
 
 # The function take 2 pictures and encode one in other by merge pixels
@@ -34,14 +41,12 @@ def encode_image():
     image1_name = input("Enter name of the original image with png extension only: ")
 
     # check if the user input has different extension than png
-    if image1_name.split(".")[1] != "PNG" and image1_name.split(".")[1] != "png":
-        raise Exception('image extension is incorrect !')
+    check_image_extension(image1_name)
 
     image2_name = input("Enter name of the hidden image with png extension only: ")
 
     # check if the user input has different extension than png
-    if str(image2_name.split(".")[1]) != "PNG" and str(image2_name.split(".")[1]) != "png":
-        raise Exception('image extension is incorrect !')
+    check_image_extension(image2_name)
 
     # Image2 is hidden inside image1
     image1 = cv2.imread(image1_name)
@@ -69,8 +74,7 @@ def encode_image():
     new_image_name = input("Enter the name for merged images - with png extension only: ")
 
     # check if the user input has different extension than png
-    if image1_name.split(".")[1] != "PNG" and image1_name.split(".")[1] != "png":
-        raise Exception('image extension is incorrect !')
+    check_image_extension(new_image_name)
 
     cv2.imwrite(new_image_name, image1)
 
@@ -79,24 +83,18 @@ def encode_image():
 # and add 4 bits of 0 or 1 randomly - to try retrieve the original pixels
 def decode_image():
     image_name = input("please enter the image's name to decode  - with png extension only: ")
-
     # check if the user input has different extension than png
-    if image_name.split(".")[1] != "PNG" and image_name.split(".")[1] != "png":
-        raise Exception('image extension is incorrect !')
+    check_image_extension(image_name)
 
     merge_image = cv2.imread(image_name)
 
     original_image_name = input("please enter name of original image - with png extension only: ")
-
     # check if the user input has different extension than png
-    if original_image_name.split(".")[1] != "PNG" and original_image_name.split(".")[1] != "png":
-        raise Exception('image extension is incorrect !')
+    check_image_extension(original_image_name)
 
     decrypted_image_name = input("please enter name of decrypted image - with png extension only: ")
-
     # check if the user input has different extension than png
-    if decrypted_image_name.split(".")[1] != "PNG" and decrypted_image_name.split(".")[1] != "png":
-        raise Exception('image extension is incorrect !')
+    check_image_extension(decrypted_image_name)
 
     width = merge_image.shape[0]
     height = merge_image.shape[1]
@@ -144,7 +142,7 @@ def modify_pixels(pixels, text):
 
     # Iterate over the list of binary representation for the text
     for i in range(length_text):
-        # Extracting 3 pixels at a time ( 9 RGB value)
+        # Extracting 3 pixels at a time (9 RGB value)
         pixels = [j for j in image_data.__next__()[:3] + image_data.__next__()[:3] + image_data.__next__()[:3]]
 
         # pixels values should be modified - odd for bit 1 and even for bit 0
@@ -203,10 +201,8 @@ def new_image_pixels(new_image, text):
 # the function get text and encode it into a new image
 def encode_text(text):
     img_name = input("Enter image name(with extension - png only): ")
-
     # check if the user input has different extension than png
-    if img_name.split(".")[1] != "PNG" and img_name.split(".")[1] != "png":
-        raise Exception('image extension is incorrect !')
+    check_image_extension(img_name)
 
     image = Image.open(img_name, 'r')  # Opening the given image for reading
     image_size = image.size[0] * image.size[1] * 3  # How many pixels the image contains
@@ -226,8 +222,7 @@ def encode_text(text):
 
     new_img_name = input("Enter the name of new image(with extension - png only): ")
     # check if the user input has different extension than png
-    if new_img_name.split(".")[1] != "PNG" and new_img_name.split(".")[1] != "png":
-        raise Exception('image extension is incorrect !')
+    check_image_extension(new_img_name)
 
     new_image.save(new_img_name, str(new_img_name.split(".")[1].upper()))
     # ^Split the new image name after '.', and save it as the given extension in Upper case
@@ -236,10 +231,8 @@ def encode_text(text):
 # the function decode hidden text from image
 def decode_text():
     img_name = input("Enter image name(with extension - png only): ")
-
     # check if the user input has different extension than png
-    if img_name.split(".")[1] != "PNG" and img_name.split(".")[1] != "png":
-        raise Exception('image extension is incorrect !')
+    check_image_extension(img_name)
 
     image = Image.open(img_name, 'r')  # Opening the given image for reading
     password_input = input("Please enter the password: ")
