@@ -3,6 +3,8 @@
 # Course lecturer - Yakir Menahem
 # Summer 2020
 
+# The two images attached to the project are for the user use - input images for encode image/text
+
 # please install the following modules:
 # pip3 install cv2
 # pip3 install numpy
