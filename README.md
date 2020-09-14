@@ -2,7 +2,7 @@ Image steganography is the process of hiding data into an image.
 In this project, we focused on hiding text within image, and image inside image - using the LSB method for hiding text inside image.
 
 Modules include:
-1. numpy
+1. Numpy
 2. Pillow
 3. CV2
 4. Random
