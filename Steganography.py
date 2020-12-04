@@ -1,8 +1,4 @@
-# Steganography project, assigned by:
-# Lilach Naor - id: 313588352, Sapir Shemesh - id: 311342794
-# Course lecturer - Yakir Menahem
-# Summer 2020
-
+# Steganography project
 # The two images attached to the project are for the user use - input images for encode image/text
 
 # please install the following modules:
